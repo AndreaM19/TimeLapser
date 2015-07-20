@@ -1,23 +1,36 @@
-#Time-Lapser Python script
+# Time-Lapser Python script
 
 import time
-#import picamera
+import picamera
+import os
 
-#VIDEO_DAYS = 1
-FRAMES_PER_HOUR = 1
+# 3=one frame every 20 minutes
+# 6=one frame every 10 minutes
+# 12=one frame every 5 minutes
+# 24=one frame every 2.5 minutes
+#FRAMES_PER_HOUR=3
+#VIDEO_HOURS=1
+
+directory='/home/pi/projects/TimeLapser/test-2';
+
+#FRAMES=FRAMES_PER_HOUR * VIDEO_HOURS
+
+#Time between two frames (second)
+FRAME_PERIOD=10
 VIDEO_HOURS=1
-# FRAMES define the number of frame captured from the camera 
-FRAMES = FRAMES_PER_HOUR * VIDEO_HOURS
+FRAMES=int(((60*60)/FRAME_PERIOD)*VIDEO_HOURS)
 
+camera=picamera.PiCamera()
+
+if not os.path.exists(directory):
+    os.makedirs(directory)
 
 # Function capture_frame
 def capture_frame(frame):
-    #with picamera.PiCamera() as cam:
-        time.sleep(2)
-        #cam.capture('test-1/frame%03d.jpg' % frame)
-        print('Frame saved in test-1/frame%03d.jpg' % frame)
+  time.sleep(2)
+  camera.capture('test-2/frame%03d.jpg' % frame)
+  print('Frame saved in test-2/frame%03d.jpg' % frame)
 # End of function
-
 
 # Capture the images
 x=1
@@ -30,8 +43,8 @@ for frame in range(FRAMES):
     # Wait for the next capture. Note that we take into
     # account the length of time it took to capture the
     # image when calculating the delay
-    if VIDEO_HOURS==1 and FRAMES_PER_HOUR==1:
-        waiting_time = 1
-    else:
-        waiting_time = int(60 * 60 / FRAMES_PER_HOUR) - (time.time() - start)
-    time.sleep(waiting_time)
+    #if VIDEO_HOURS==1 and FRAMES_PER_HOUR==1:
+    #    waiting_time = 1
+    #else:
+    #    waiting_time = int(60 * 60 / FRAMES_PER_HOUR) - (time.time() - start)
+    time.sleep(FRAME_PERIOD-2)
